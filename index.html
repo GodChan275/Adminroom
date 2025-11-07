@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เข้าสู่หลังบ้าน</title>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Bai Jamjuree";}
+body{background:#fff3fe;color:#7a4c94;display:flex;justify-content:center;align-items:center;height:100vh;}
+
+.box{
+  background:white;
+  width:320px;
+  padding:25px;
+  border-radius:18px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+  text-align:center;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:15px;
+  border:none;
+  border-radius:12px;
+  box-shadow:0 3px 6px rgba(0,0,0,0.1);
+  outline:none;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  background:#ff9fd4;
+  border:none;
+  color:white;
+  border-radius:12px;
+  font-weight:600;
+  cursor:pointer;
+  margin-top:18px;
+}
+button:hover{background:#f875bc;}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>🔒 เข้าสู่ระบบหลังบ้าน</h2>
+  <input type="password" id="key" placeholder="กรอกรหัสผ่าน">
+  <button onclick="login()">เข้าสู่หลังบ้าน</button>
+</div>
+
+<script>
+function login(){
+  const key = document.getElementById("key").value.trim();
+  const correctPassword = "admin123"; // ✅
+
+  if(key === correctPassword){
+    window.location.href = "admin.html";
+  }else{
+    alert("❌ รหัสไม่ถูกต้อง");
+  }
+}
+</script>
+
+</body>
+</html>

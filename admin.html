@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>หลังบ้าน</title>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Bai Jamjuree";}
+body{
+  background: #fff3fe;
+  color: #7a4c94;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* กล่องหลัก */
+.container{
+  max-width: 900px;
+  margin: auto;
+  background:white;
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* หัวข้อ */
+h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+/* ตาราง */
+table{
+  width:100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th, td{
+  padding:12px;
+  text-align:left;
+  border-bottom:1px solid #eee;
+}
+
+th{
+  background:#ff9fd4;
+  color:white;
+  border-radius:8px;
+}
+
+tr:hover{
+  background:#ffe0f2;
+}
+
+/* ปุ่ม */
+button{
+  padding:10px 15px;
+  background:#ff9fd4;
+  color:white;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  margin-top:15px;
+}
+button:hover{background:#f875bc;}
+
+/* 📱 responsive */
+@media(max-width:600px){
+  .container{
+    padding:15px;
+  }
+  th, td{
+    padding:8px;
+    font-size:14px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>📋 หลังบ้าน - รายการข้อเสนอ / โครงการ</h2>
+  <button onclick="logout()">🚪 ออกจากระบบ</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ชื่อผู้ส่ง</th>
+        <th>ข้อความ</th>
+        <th>วันที่ส่ง</th>
+      </tr>
+    </thead>
+    <tbody id="proposalTable">
+      <!-- รายการข้อเสนอจะมาแสดงตรงนี้ -->
+    </tbody>
+  </table>
+</div>
+
+<script type="module">
+  
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = 'https://vkkadecyyiqcesydnwro.supabase.co'
+const supabaseKey = process.env.SUPABASE_KEY
+const supabase = createClient(supabaseUrl, supabaseKey)
+  const proposalTable = document.getElementById("proposalTable");
+
+  async function loadProposals(){
+    const { data, error } = await supabase
+      .from("proposals")
+      .select("*")
+      .order("id", { ascending: false });
+
+    if(error){
+      alert("❌ โหลดข้อมูลล้มเหลว: "+error.message);
+      return;
+    }
+
+    proposalTable.innerHTML = "";
+    data.forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${item.name}</td>
+        <td>${item.message}</td>
+        <td>${new Date(item.created_at).toLocaleString()}</td>
+      `;
+      proposalTable.appendChild(tr);
+    });
+  }
+
+  async function logout(){
+    window.location.href = "admin_login.html"; // เปลี่ยนตามไฟล์ login
+  }
+
+  loadProposals();
+</script>
+
+</body>
+</html>
