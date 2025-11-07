@@ -7,134 +7,138 @@
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
+/* ... (โค้ด CSS เดิม) ... */
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Bai Jamjuree";}
 body{
-  background: #fff3fe;
-  color: #7a4c94;
-  padding: 20px;
-  min-height: 100vh;
+  background: #fff3fe;
+  color: #7a4c94;
+  padding: 20px;
+  min-height: 100vh;
 }
 
 /* กล่องหลัก */
 .container{
-  max-width: 900px;
-  margin: auto;
-  background:white;
-  padding:20px;
-  border-radius:18px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+  max-width: 900px;
+  margin: auto;
+  background:white;
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
 
 /* หัวข้อ */
 h2{
-  text-align:center;
-  margin-bottom:20px;
+  text-align:center;
+  margin-bottom:20px;
 }
 
 /* ตาราง */
 table{
-  width:100%;
-  border-collapse: collapse;
-  margin-top: 15px;
+  width:100%;
+  border-collapse: collapse;
+  margin-top: 15px;
 }
 
 th, td{
-  padding:12px;
-  text-align:left;
-  border-bottom:1px solid #eee;
+  padding:12px;
+  text-align:left;
+  border-bottom:1px solid #eee;
 }
 
 th{
-  background:#ff9fd4;
-  color:white;
-  border-radius:8px;
+  background:#ff9fd4;
+  color:white;
+  border-radius:8px;
 }
 
 tr:hover{
-  background:#ffe0f2;
+  background:#ffe0f2;
 }
 
 /* ปุ่ม */
 button{
-  padding:10px 15px;
-  background:#ff9fd4;
-  color:white;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  margin-top:15px;
+  padding:10px 15px;
+  background:#ff9fd4;
+  color:white;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  margin-top:15px;
 }
 button:hover{background:#f875bc;}
 
 /* 📱 responsive */
 @media(max-width:600px){
-  .container{
-    padding:15px;
-  }
-  th, td{
-    padding:8px;
-    font-size:14px;
-  }
+  .container{
+    padding:15px;
+  }
+  th, td{
+    padding:8px;
+    font-size:14px;
+  }
 }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h2>📋 หลังบ้าน - รายการข้อเสนอ / โครงการ</h2>
-  <button onclick="logout()">🚪 ออกจากระบบ</button>
+  <h2>📋 หลังบ้าน - รายการข้อเสนอ / โครงการ</h2>
+  <button onclick="logout()">🚪 ออกจากระบบ</button>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ชื่อผู้ส่ง</th>
-        <th>ข้อความ</th>
-        <th>วันที่ส่ง</th>
-      </tr>
-    </thead>
-    <tbody id="proposalTable">
-      <!-- รายการข้อเสนอจะมาแสดงตรงนี้ -->
-    </tbody>
-  </table>
+  <table>
+    <thead>
+      <tr>
+        <th>ชื่อผู้ส่ง</th>
+        <th>ข้อความ</th>
+        <th>วันที่ส่ง</th>
+      </tr>
+      </thead>
+    <tbody id="proposalTable">
+          </tbody>
+  </table>
 </div>
 
 <script type="module">
-  
-import { createClient } from '@supabase/supabase-js'
+// 1. แก้ไข: กลับไปใช้ CDN URL เพื่อให้เบราว์เซอร์หาไลบรารีเจอ (แก้ปัญหา Uncaught TypeError)
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-const supabaseUrl = 'https://vkkadecyyiqcesydnwro.supabase.co'
-const supabaseKey = process.env.SUPABASE_KEY
-const supabase = createClient(supabaseUrl, supabaseKey)
-  const proposalTable = document.getElementById("proposalTable");
+const supabaseUrl = 'https://vkkadecyyiqcesydnwro.supabase.co';
+// 2. แก้ไข: ใช้ anon Key โดยตรง เพราะ process.env ไม่ทำงานบนเบราว์เซอร์
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZra2FkZWN5eWlxY2VzeWRud3JvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0NDM4NDYsImV4cCI6MjA3ODAxOTg0Nn0.8NAvXsaLHXhmurltWuxLQFH-vpg0om37QWgMHSLGcc0";
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-  async function loadProposals(){
-    const { data, error } = await supabase
-      .from("proposals")
-      .select("*")
-      .order("id", { ascending: false });
+// 3. แก้ไข: เปลี่ยนตัวแปรให้ตรงกับ ID ใน HTML (tbody id="proposalTable")
+const proposalTable = document.getElementById("proposalTable"); 
 
-    if(error){
-      alert("❌ โหลดข้อมูลล้มเหลว: "+error.message);
-      return;
-    }
+async function loadProposals(){
+    const { data, error } = await supabase
+      .from("proposals")
+      .select("*")
+      .order("id", { ascending: false });
 
-    proposalTable.innerHTML = "";
-    data.forEach(item => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${item.name}</td>
-        <td>${item.message}</td>
-        <td>${new Date(item.created_at).toLocaleString()}</td>
-      `;
-      proposalTable.appendChild(tr);
-    });
-  }
+    if(error){
+      // หากเกิด error เรื่องสิทธิ์ (permission denied) จะแสดง alert
+      alert("❌ โหลดข้อมูลล้มเหลว: "+error.message);
+      return;
+    }
 
-  async function logout(){
-    window.location.href = "admin_login.html"; // เปลี่ยนตามไฟล์ login
-  }
+    proposalTable.innerHTML = "";
+    data.forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${item.name}</td>
+        <td>${item.message}</td>
+        <td>${new Date(item.created_at).toLocaleString()}</td>
+      `;
+      proposalTable.appendChild(tr);
+    });
+}
 
-  loadProposals();
+async function logout(){
+    window.location.href = "admin_login.html"; 
+}
+
+loadProposals();
 </script>
 
 </body>
